@@ -8,6 +8,8 @@ def main():
         '../data/seekers.csv', '../data/jobs.csv', '../data/location_distances.csv'
     )
 
+    location_distances.to_csv('../results/location_distance_matrix.csv')
+
     compatible = check_compatibility(seekers, jobs, location_distances)
     dissimilarities = calculate_dissimilarities(seekers, jobs, compatible)
 
