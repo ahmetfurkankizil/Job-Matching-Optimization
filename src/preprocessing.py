@@ -18,7 +18,7 @@ def is_compatible(seeker, job, distance_matrix):
     # Requirement 1 (Job Type): Seeker's desired type is compatible with the job's type, if not returns false
     if seeker['Desired_Job_Type'] != job['Job_Type']:
         return False
-    # Requirement 2 (Salary): Seeker's minimum desired salary alighns with the job's salary offering
+    # Requirement 2 (Salary): Seeker's minimum desired salary aligns with the job's salary offering
         # The logic is to compare the Seeker's Min_Desired_Salary with the Salary_Range_Max and return False if not.
         # Traversing each possible job-seeker combinations in the check_compatibilty function automatically filters
         # out the inappropriate ones from the model.
@@ -43,14 +43,13 @@ def check_compatibility(seekers, jobs, location_distances):
     compatibility = {}
     for i, s in seekers.iterrows():
         for j, job in jobs.iterrows():
-            compatibility[(i, j)] = is_compatible(s, job, location_distances)
+            compatibility[(i, j)] = 1 if is_compatible(s, job, location_distances) else 0
     return compatibility
 
-def calculate_dissimilarities(seekers, jobs, compatible_pairs):
+def calculate_dissimilarities(seekers, jobs, pairs):
     dissimilarity = {}
-    for (i, j), valid in compatible_pairs.items():
-        if valid:
-            si = seekers.loc[i, 'Questionnaire']
-            sj = jobs.loc[j, 'Questionnaire']
-            dissimilarity[(i, j)] = sum(abs(a - b) for a, b in zip(si, sj)) / 20
+    for i, j in pairs:
+        si = seekers.loc[i, 'Questionnaire']
+        sj = jobs.loc[j, 'Questionnaire']
+        dissimilarity[(i, j)] = sum(abs(a - b) for a, b in zip(si, sj)) / 20
     return dissimilarity

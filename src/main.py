@@ -10,17 +10,22 @@ def main():
 
     location_distances.to_csv('../results/location_distance_matrix.csv')
 
-    compatible = check_compatibility(seekers, jobs, location_distances)
-    dissimilarities = calculate_dissimilarities(seekers, jobs, compatible)
 
-    M_w, assignments_p1 = solve_part1(seekers, jobs, compatible)
+    compatiblity_values = check_compatibility(seekers, jobs, location_distances)
+    pairs = [
+        (i, j) for i in seekers.index 
+        for j in jobs.index 
+    ]
+    dissimilarities = calculate_dissimilarities(seekers, jobs, pairs)
+
+    M_w, assignments_p1 = solve_part1(seekers, jobs, compatiblity_values, pairs)
     save_assignments(assignments_p1, '../results/assignments/part1_assignments.csv')
 
     omega_values = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
     results = []
 
     for omega in omega_values:
-        max_d, assignments = solve_part2(omega, M_w, seekers, jobs, compatible, dissimilarities)
+        max_d, assignments = solve_part2(omega, M_w, seekers, jobs, compatiblity_values, pairs, dissimilarities)
         save_assignments(assignments, f'../results/assignments/part2_omega_{omega}.csv')
         results.append((omega, max_d))
 
